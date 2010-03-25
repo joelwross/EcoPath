@@ -5,7 +5,7 @@
 	android:orientation="vertical">
 	<com.google.android.maps.MapView android:id="@+id/mapview" 
 		android:layout_width="fill_parent"
-		android:layout_height="fill_parent" 
+		android:layout_height="100px" 
 		android:enabled="true"
 		android:clickable="true" 
 		android:apiKey="0m5WMbN26oqGnFSosw6G6uWKmeSJq0y7UB3bREQ" />

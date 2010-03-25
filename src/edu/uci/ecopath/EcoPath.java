@@ -1,16 +1,21 @@
 package edu.uci.ecopath;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.util.EntityUtils;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -65,7 +70,15 @@ public class EcoPath extends MapActivity
 	private OnClickListener goButtonListener = new OnClickListener() {
 		public void onClick(View v)
 		{
-			sv.setText("You clicked the button! Sending Request...");
+			sv.setText("You clicked the button! Now take a picture.");
+
+			//take a picture
+			Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+			intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File("TempPicture")));
+			startActivityForResult(intent, 0);
+
+			
+			//sv.setText("You clicked the button! Sending Request...");
 						
 			//String url = "http://dhcp-v000-183.mobile.uci.edu/~joel/ecopath_test.php";
 			String url = "http://10.0.2.2:3000/markers";
@@ -85,8 +98,27 @@ public class EcoPath extends MapActivity
 
 			dv.setText(response);
 		}		
+
 	};
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) 
+	{
+		super.onActivityResult(requestCode, resultCode, data);
+		sv.setText("In onActivityResult");
+		if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
+			if (data == null) {
+				sv.setText("No Returned Intent");
+				Log.v("CAMERA RESULT", "NO RETURNED INTENT");
+				return;
+			} else {
+				sv.setText("I got something back!");
+				Log.v("CAMERA RESULT", "I GOT SOMETHING BACK!!!!");
+				return;
+			}
+		}
+	}
+	
 	//from: http://www.devx.com/wireless/Article/39239/1954
 	private class MyLocationListener implements LocationListener 
 	{
@@ -113,5 +145,4 @@ public class EcoPath extends MapActivity
 	protected boolean isRouteDisplayed()
 	{ return false; }
 
-	
 }
